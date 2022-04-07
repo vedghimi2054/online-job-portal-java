@@ -1,5 +1,7 @@
 package com.youtube.jwt.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.youtube.jwt.entity.ApplyJob;
 import com.youtube.jwt.helper.UploadResumeHelper;
 import com.youtube.jwt.service.ApplyJobService;
@@ -22,13 +24,11 @@ public class ApplyJobController {
         this.uploadResumeHelper = uploadResumeHelper;
     }
 
-    @PostMapping(value = "/postApplyJob",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/postApplyJob",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    @PreAuthorize("hasRole('User')")
-    public ResponseEntity<ApplyJob> postApplyJob(@RequestPart("applyJob") ApplyJob applyJob, @RequestPart("file") MultipartFile file) {
-        String resume = applyJob.getResume();
-        if (resume == null) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("request must contain file");
-        }
+    public ResponseEntity<ApplyJob> postApplyJob(@RequestPart("applyJob") String applyJobStr, @RequestPart("file") MultipartFile file) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ApplyJob applyJob = mapper.readValue(applyJobStr, ApplyJob.class);
         try {
             if (file.isEmpty()) {
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("request must contain file");
@@ -39,10 +39,11 @@ public class ApplyJobController {
         }catch (Exception e){
             e.printStackTrace();
         }
+        System.out.println("file name"+file.getContentType());
         //file uploads
         boolean f=uploadResumeHelper.uploadFile(file);
         if(f){
-            return new ResponseEntity<ApplyJob>(applyJobService.createApply(applyJob), HttpStatus.CREATED);
+            applyJob.setResume(file.getOriginalFilename());
         }
         return new ResponseEntity<ApplyJob>(applyJobService.createApply(applyJob), HttpStatus.CREATED);
 

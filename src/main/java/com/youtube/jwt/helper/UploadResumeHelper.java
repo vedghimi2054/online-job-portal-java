@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class UploadResumeHelper {
-    public final String UPLOAD_DIR="/home/spacex/Documents/job-portal-sprint-java/src/main/resources/static/uploadedfolder";
+    public final String UPLOAD_DIR="/home/spacex/Desktop/springbootimage";
 
     public boolean uploadFile(MultipartFile multipartFile){
         boolean f=false;
@@ -30,6 +30,7 @@ public class UploadResumeHelper {
             LocalDateTime localDateTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd:MM:yyyy HH:mm:ss");
             String fileLocation  = UPLOAD_DIR + File.separator+multipartFile.getOriginalFilename()+localDateTime.format(dateTimeFormatter);
+            System.out.println("file location");
             Files.copy(multipartFile.getInputStream(), Paths.get(fileLocation), StandardCopyOption.REPLACE_EXISTING);
             f=true;
 
