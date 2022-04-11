@@ -9,8 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.security.Principal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -41,7 +46,18 @@ public class UserService {
         recruiterRole.setRoleName("Recruiter");
         recruiterRole.setRoleDescription("Default role for newly created record");
         roleDao.save(recruiterRole);
-
+//for recruiters
+        User recruitersUser = new User();
+        recruitersUser.setUserName("recruiters@123");
+        recruitersUser.setUserPassword(getEncodedPassword("recruiters123"));
+        recruitersUser.setUserEmail("recruiters@gmail.com");
+        recruitersUser.setUserFirstName("recruiters");
+        recruitersUser.setUserLastName("recruiters");
+        Set<Role> recruitersRoles = new HashSet<>();
+        recruitersRoles.add(recruiterRole);
+        recruitersUser.setRole(recruitersRoles);
+        userDao.save(recruitersUser);
+//for admin
         User adminUser = new User();
         adminUser.setUserName("admin123");
         adminUser.setUserPassword(getEncodedPassword("admin@pass"));
@@ -62,11 +78,19 @@ public class UserService {
         user.setUserPassword(getEncodedPassword(user.getUserPassword()));
         return userDao.save(user);
     }
-    public boolean isUserPresent(User user){
-        boolean userExists=false;
-        User existingUser=userDao.findByUserName(user.getUserName());
-        if(existingUser!=null){
-            userExists=true;
+
+    public List<User> getAllUsers(User user) {
+        return (List<User>) userDao.findAll();
+    }
+
+    //    public void deleteRegisterUsers(Integer userId){
+//        userDao.deleteById(String.valueOf(userId));
+//    }
+    public boolean isUserPresent(User user) {
+        boolean userExists = false;
+        User existingUser = userDao.findByUserName(user.getUserName());
+        if (existingUser != null) {
+            userExists = true;
         }
         return userExists;
     }

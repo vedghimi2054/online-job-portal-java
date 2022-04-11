@@ -1,5 +1,6 @@
 package com.youtube.jwt.controller;
 
+import com.youtube.jwt.controller.base.BaseController;
 import com.youtube.jwt.entity.JwtRequest;
 import com.youtube.jwt.entity.JwtResponse;
 import com.youtube.jwt.service.JwtService;
@@ -10,11 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = {
-        "192.168.88.79:3000",
-        "http://localhost:3000"
-})
-public class JwtController {
+public class JwtController extends BaseController {
 
     @Autowired
     private JwtService jwtService;

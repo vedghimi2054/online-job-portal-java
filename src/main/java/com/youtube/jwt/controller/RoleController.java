@@ -1,5 +1,6 @@
 package com.youtube.jwt.controller;
 
+import com.youtube.jwt.controller.base.BaseController;
 import com.youtube.jwt.entity.Role;
 import com.youtube.jwt.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class RoleController {
+public class RoleController extends BaseController {
 
     @Autowired
     private RoleService roleService;

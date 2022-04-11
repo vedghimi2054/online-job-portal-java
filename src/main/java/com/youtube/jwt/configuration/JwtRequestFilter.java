@@ -1,5 +1,4 @@
 package com.youtube.jwt.configuration;
-
 import com.youtube.jwt.service.JwtService;
 import com.youtube.jwt.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
