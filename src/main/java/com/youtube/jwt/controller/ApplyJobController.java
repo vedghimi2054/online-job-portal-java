@@ -24,7 +24,7 @@ public class ApplyJobController extends BaseController {
         this.uploadResumeHelper = uploadResumeHelper;
     }
 
-    @PostMapping(value = "/postApplyJob",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/postApplyJob")
     @PreAuthorize("hasRole('User')")
     public ResponseEntity<ApplyJob> postApplyJob(@RequestPart("applyJob") String applyJobStr, @RequestPart("file") MultipartFile file) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -50,7 +50,7 @@ public class ApplyJobController extends BaseController {
     }
 
     @GetMapping("/getAllApplyJobList")
-    @PreAuthorize("hasRole('Recruiter')")
+//    @PreAuthorize("hasRole('Recruiter')")
     public List<ApplyJob> getAllApplyJobList() {
         return applyJobService.getApplyJobList();
     }

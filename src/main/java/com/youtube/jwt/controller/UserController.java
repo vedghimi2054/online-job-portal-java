@@ -33,7 +33,6 @@ public class UserController extends BaseController {
         }
         return userService.registerNewUser(user);
     }
-
     @GetMapping("/getAllRegisterUsers")
     public List<User> getAllRegisterUser(User user) {
         return userService.getAllUsers(user);
@@ -44,13 +43,13 @@ public class UserController extends BaseController {
 //        userService.deleteRegisterUsers(userId);
 //        return new ResponseEntity<String>("deleted successfully",HttpStatus.OK);
 //    }
-    @GetMapping("/searchUser/{query}")
-    public ResponseEntity<?> searchUsers(@PathVariable("query") String query, Principal principal) {
-        System.out.println(query);
-        User user = userDao.findByUserName(principal.getName());
-        List<User> users = this.userDao.search(query, user);
-        return ResponseEntity.ok(users);
-    }
+//    @GetMapping("/searchUser/{query}")
+//    public ResponseEntity<?> searchUsers(@PathVariable("query") String query, Principal principal) {
+//        System.out.println(query);
+//        User user = userDao.findByUserName(principal.getName());
+//        List<User> users = this.userDao.search(query, user);
+//        return ResponseEntity.ok(users);
+//    }
     @GetMapping({"/forAdmin"})
     @PreAuthorize("hasRole('Admin')")
     public String forAdmin() {
