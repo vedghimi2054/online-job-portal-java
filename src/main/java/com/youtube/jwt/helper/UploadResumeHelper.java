@@ -30,12 +30,11 @@ public class UploadResumeHelper {
             LocalDateTime localDateTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd:MM:yyyy HH:mm:ss");
             String fileLocation  = UPLOAD_DIR + File.separator+multipartFile.getOriginalFilename()+localDateTime.format(dateTimeFormatter);
-            System.out.println("file location");
+            System.out.println("file location"+fileLocation);
             Files.copy(multipartFile.getInputStream(), Paths.get(fileLocation), StandardCopyOption.REPLACE_EXISTING);
             f=true;
-
         }catch (Exception e){
-            e.printStackTrace();
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
         return f;
     }

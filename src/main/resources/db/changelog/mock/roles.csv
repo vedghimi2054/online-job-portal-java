@@ -1,0 +1,4 @@
+role_id,role_name,role_description
+1,"Admin","admin role"
+2,"User","User role"
+3,"Recruiter","Recruiter role"

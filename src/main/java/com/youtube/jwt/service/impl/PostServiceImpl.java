@@ -1,5 +1,4 @@
 package com.youtube.jwt.service.impl;
-
 import com.youtube.jwt.dao.PostRepository;
 import com.youtube.jwt.entity.JobPosts;
 import com.youtube.jwt.exception.ResourceNotFoundException;

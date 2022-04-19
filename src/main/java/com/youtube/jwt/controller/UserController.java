@@ -5,6 +5,7 @@ import com.youtube.jwt.dao.UserDao;
 import com.youtube.jwt.entity.User;
 import com.youtube.jwt.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +30,13 @@ public class UserController extends BaseController {
     @PostMapping({"/registerNewUser"})
     public User registerNewUser(@RequestBody User user) {
         if (userService.isUserPresent(user)) {
-
+            ResponseEntity.ok("username already exists");
         }
         return userService.registerNewUser(user);
     }
     @GetMapping("/getAllRegisterUsers")
-    public List<User> getAllRegisterUser(User user) {
-        return userService.getAllUsers(user);
+    public List<User> getAllRegisterUser() {
+        return userService.getAllUsers();
     }
 
     //    @DeleteMapping("/deleteRegisteruser/{userid}")
@@ -50,15 +51,4 @@ public class UserController extends BaseController {
 //        List<User> users = this.userDao.search(query, user);
 //        return ResponseEntity.ok(users);
 //    }
-    @GetMapping({"/forAdmin"})
-    @PreAuthorize("hasRole('Admin')")
-    public String forAdmin() {
-        return "This URL is only accessible to the admin";
-    }
-
-    @GetMapping({"/forUser"})
-    @PreAuthorize("hasRole('User')")
-    public String forUser() {
-        return "This URL is only accessible to the user";
-    }
 }

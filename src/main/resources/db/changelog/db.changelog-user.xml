@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="dc921555ae311f6f7a7c" author="jobportalcdn">
+        <loadData tableName="user" file="db/changelog/mock/users.csv" separator=";">
+        <createTable tableName="user">
+
+            <column name="user_id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="user_id_pk" unique="true"></constraints>
+            </column>
+            <column name="user_name" type="varchar(100)">
+                <constraints primaryKey="true" primaryKeyName="user_name_pk" unique="true"></constraints>
+            </column>
+            <column name="first_name" type="varchar(100)">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="last_name" type="varchar(100)">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="password" type="varchar(100)">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+        <loadData tableName="role" file="db/changelog/mock/roles.csv" separator=";"></loadData>
+
+        <createTable tableName="role">
+            <column name="role_id" type="integer">
+                <constraints primaryKey="true" primaryKeyName="role_id_pk" unique="true"></constraints>
+            </column>
+            <column name="role_name" type="varchar(100)">
+                <constraints primaryKey="true" primaryKeyName="role_name_pk" unique="true"></constraints>
+            </column>
+            <column name="role_description" type="varchar(255)">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+
+        <loadData tableName="user_role" file="db/changelog/mock/user_role.csv" separator=";"></loadData>
+        <createTable tableName="user_role">
+            <column name="role_id" type="integer">
+                <constraints foreignKeyName="role_role_fk" references="role(role_id)"/>
+            </column>
+            <column name="user_id" type="integer">
+                <constraints foreignKeyName="user_role_fk" references="user(user_id)"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="user" baseColumnNames="user_name" constraintName="user_name_fk"
+                                 referencedTableName="role"
+                                 referencedColumnNames="role_name"
+        />
+        <addForeignKeyConstraint baseTableName="user" baseColumnNames="user_id" constraintName="user_name_appl_fk"
+                                 referencedTableName="apply_job"
+                                 referencedColumnNames="job_id"
+        />
+    </changeSet>
+
+</databaseChangeLog>

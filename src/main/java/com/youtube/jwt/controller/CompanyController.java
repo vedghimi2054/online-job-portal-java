@@ -8,6 +8,7 @@ import com.youtube.jwt.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ public class CompanyController {
     private UploadResumeHelper uploadResumeHelper;
 
     @PostMapping("/createRecruiters")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Recruiters> createRecruiters(@RequestPart("addRecruiter") String recruiterstr, @RequestPart("image") MultipartFile file) throws JsonProcessingException {
         ObjectMapper objectMapper=new ObjectMapper();
         Recruiters recruiters=objectMapper.readValue(recruiterstr,Recruiters.class);
@@ -43,18 +45,22 @@ public class CompanyController {
         return new ResponseEntity<Recruiters>(companyService.createRecruiters(recruiters), HttpStatus.CREATED);
     }
     @GetMapping("/getAllRecruiters")
+    @PreAuthorize("hasRole('Admin')")
     public List<Recruiters> getAllRecruiters(){
         return companyService.getAllRecruiters();
     }
     @GetMapping("/getAllRecruiters/{recruiterId}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Recruiters> getAllRecruitersById(@PathVariable("recruiterId") Integer rec_id){
         return new ResponseEntity<Recruiters>(companyService.getAllRecruitersById(rec_id),HttpStatus.OK);
     }
     @PutMapping("/updateRecruiters/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Recruiters> updateRecruiters(@RequestBody Recruiters recruiters,@PathVariable("id") Integer comp_id){
         return new ResponseEntity<>(companyService.updateRecruiters(recruiters,comp_id),HttpStatus.OK);
     }
     @DeleteMapping("/deleteRecruitersById/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<String> deleteRecruitersById(@PathVariable("id") Integer comp_id){
         companyService.deleteRecruiterById(comp_id);
         return new ResponseEntity<String>("delete Successfully",HttpStatus.OK);

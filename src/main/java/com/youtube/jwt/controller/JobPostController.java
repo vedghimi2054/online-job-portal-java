@@ -40,7 +40,7 @@ public class JobPostController extends BaseController {
     }
 
     @GetMapping("/approveAll")
-    @PreAuthorize("hasRole('Admin')")
+//    @PreAuthorize("hasRole('Admin')")
     public String approveAll() {
         ((Collection<JobPosts>) postRepository.findAll()).stream().filter(post -> post.getStatus().equals(PostStatus.PENDING)).forEach(post -> {
             post.setStatus(PostStatus.APPROVED);
@@ -51,7 +51,7 @@ public class JobPostController extends BaseController {
     }
 
     @GetMapping("removePost/{postId}")
-    @PreAuthorize("hasRole('Admin')")
+//    @PreAuthorize("hasRole('Admin')")
     public JobPosts removePost(@PathVariable Integer postId) {
         JobPosts post = postRepository.findById(postId).get();
         post.setStatus(PostStatus.REJECTED);
@@ -59,7 +59,7 @@ public class JobPostController extends BaseController {
     }
 
     @GetMapping("/rejectAll")
-    @PreAuthorize("hasRole('Admin')")
+//    @PreAuthorize("hasRole('Admin')")
     public String rejectAll() {
         ((Collection<JobPosts>) postRepository.findAll()).stream().filter(post -> post.getStatus().equals(PostStatus.PENDING)).forEach(post -> {
             post.setStatus(PostStatus.REJECTED);
@@ -69,12 +69,13 @@ public class JobPostController extends BaseController {
     }
 
     @GetMapping("/viewAll")
-    @PreAuthorize("hasRole('Admin')")
+//    @PreAuthorize("hasRole('Admin')")
     public List<JobPosts> viewAll() {
         return ((Collection<JobPosts>) postRepository.findAll()).stream().filter(post -> post.getStatus().equals(PostStatus.APPROVED)).collect(Collectors.toList());
     }
 
     @GetMapping("/getAllPosts")
+//    @PreAuthorize("hasRole('Recruiter')")
     public List<JobPosts> getAllPosts() {
         return postService.getAllPost();
     }

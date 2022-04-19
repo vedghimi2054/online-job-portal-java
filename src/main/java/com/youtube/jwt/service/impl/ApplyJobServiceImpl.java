@@ -21,7 +21,6 @@ public class ApplyJobServiceImpl implements ApplyJobService {
     public List<ApplyJob> getApplyJobList() {
         return applyJobRepository.findAll();
     }
-
     @Override
     public ApplyJob getApplyJobListById(Integer applyId) {
         return applyJobRepository.findById(applyId).orElseThrow(()->new ResourceNotFoundException("Apply job","ID",applyId));

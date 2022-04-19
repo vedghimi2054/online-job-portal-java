@@ -46,10 +46,11 @@ public class UserService {
         recruiterRole.setRoleName("Recruiter");
         recruiterRole.setRoleDescription("Default role for newly created record");
         roleDao.save(recruiterRole);
-//for recruiters
+        //for recruiters
         User recruitersUser = new User();
         recruitersUser.setUserName("recruiters@123");
         recruitersUser.setUserPassword(getEncodedPassword("recruiters123"));
+//        System.out.println("Password: " + recruitersUser.getUserPassword());
         recruitersUser.setUserEmail("recruiters@gmail.com");
         recruitersUser.setUserFirstName("recruiters");
         recruitersUser.setUserLastName("recruiters");
@@ -79,7 +80,7 @@ public class UserService {
         return userDao.save(user);
     }
 
-    public List<User> getAllUsers(User user) {
+    public List<User> getAllUsers() {
         return (List<User>) userDao.findAll();
     }
 
