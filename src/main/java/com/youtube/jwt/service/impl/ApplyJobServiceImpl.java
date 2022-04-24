@@ -25,4 +25,9 @@ public class ApplyJobServiceImpl implements ApplyJobService {
     public ApplyJob getApplyJobListById(Integer applyId) {
         return applyJobRepository.findById(applyId).orElseThrow(()->new ResourceNotFoundException("Apply job","ID",applyId));
     }
+
+    @Override
+    public void deleteApplyJobList() {
+        applyJobRepository.deleteAll();
+    }
 }

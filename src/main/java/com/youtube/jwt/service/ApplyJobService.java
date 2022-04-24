@@ -8,4 +8,5 @@ public interface ApplyJobService {
     ApplyJob createApply(ApplyJob applyJob);
     List<ApplyJob> getApplyJobList();
     ApplyJob getApplyJobListById(Integer applyId);
+    void deleteApplyJobList();
 }

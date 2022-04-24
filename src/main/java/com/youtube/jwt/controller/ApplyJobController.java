@@ -4,8 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.youtube.jwt.controller.base.BaseController;
 import com.youtube.jwt.entity.ApplyJob;
 import com.youtube.jwt.helper.UploadResumeHelper;
+import com.youtube.jwt.payload.UploadFileResponse;
 import com.youtube.jwt.service.ApplyJobService;
+import com.youtube.jwt.service.FileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,12 +29,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ApplyJobController extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(ApplyJobController.class);
     private final ApplyJobService applyJobService;
 
+    @Autowired
+    private FileStorageService fileStorageService;
     private final UploadResumeHelper uploadResumeHelper;
 
     public ApplyJobController(ApplyJobService applyJobService, UploadResumeHelper uploadResumeHelper) {
@@ -51,53 +63,39 @@ public class ApplyJobController extends BaseController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("file name"+file.getContentType());
-        //file uploads
-        boolean f=uploadResumeHelper.uploadFile(file);
-        if(f){
-            applyJob.setResume(file.getOriginalFilename());
-        }
+        String fileName = fileStorageService.storeFile(file);
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+        new UploadFileResponse(fileName,fileDownloadUri,file.getContentType(),file.getSize());
+        applyJob.setResume(file.getOriginalFilename());
         return new ResponseEntity<ApplyJob>(applyJobService.createApply(applyJob), HttpStatus.CREATED);
     }
-    @GetMapping("/downloadFile/{fileName}")
-    public ResponseEntity<ApplyJob> downloadFile(@PathVariable("fileName") MultipartFile fileName , HttpServletResponse response){
-        ApplyJob applyJob= new ApplyJob();
-        boolean file= uploadResumeHelper.uploadFile(fileName);
-        if(file){
-            applyJob.setResume(fileName.getOriginalFilename());
-        }
-        String folderPath=uploadResumeHelper.UPLOAD_DIR;
-//        if(fileName.indexOf(".doc")>-1){
-//            response.setContentType("application/msword");
-//        }
-//        if(fileName.indexOf(".docx")>-1){
-//            response.setContentType("application/msword");
-//        }
-//        if(fileName.indexOf(".pdf")>-1){
-//            response.setContentType("application/pdf");
-//        }
-        response.setHeader("Content-Disposition","attachment; fileName="+fileName);
-        response.setHeader("Content-Transfer-Encoding","binary");
+    @GetMapping("/downloadFile/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        // Load file as Resource
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+        // Try to determine file's content type
+        String contentType = null;
         try {
-            BufferedOutputStream bos=new BufferedOutputStream(response.getOutputStream());
-            FileInputStream fis= new FileInputStream(folderPath+fileName);
-            int len;
-            byte[] buf=new byte[1024];
-            while((len=fis.read(buf))>0){
-                bos.write(buf,0,len);
-
-            }
-            bos.close();
-            response.flushBuffer();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            logger.info("Could not determine file type.");
         }
-//        File file=new File(fileName);
-//        InputStreamResource resource=new InputStreamResource(new FileInputStream(file));
-        return null;
-//
-    }
 
+        // Fallback to the default content type if type could not be determined
+        if(contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
     @GetMapping("/getAllApplyJobList")
 //    @PreAuthorize("hasRole('Recruiter')")
     public List<ApplyJob> getAllApplyJobList() {
@@ -108,4 +106,10 @@ public class ApplyJobController extends BaseController {
     public ResponseEntity<ApplyJob> getAllApplyJobById(@PathVariable("id") Integer applyId) {
         return new ResponseEntity<ApplyJob>(applyJobService.getApplyJobListById(applyId), HttpStatus.OK);
     }
+    @DeleteMapping("/deleteAllApplyJobList")
+    public ResponseEntity<String> deleteAllApplyJobList(){
+        applyJobService.deleteApplyJobList();
+        return new ResponseEntity<String>("deleted successfully",HttpStatus.OK);
+    }
+
 }

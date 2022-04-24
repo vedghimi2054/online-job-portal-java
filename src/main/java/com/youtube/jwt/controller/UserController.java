@@ -3,6 +3,7 @@ package com.youtube.jwt.controller;
 import com.youtube.jwt.controller.base.BaseController;
 import com.youtube.jwt.dao.UserDao;
 import com.youtube.jwt.entity.User;
+import com.youtube.jwt.exception.UserNameAlreadyExists;
 import com.youtube.jwt.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,8 @@ public class UserController extends BaseController {
 
     @PostMapping({"/registerNewUser"})
     public User registerNewUser(@RequestBody User user) {
-        if (userService.isUserPresent(user)) {
-            ResponseEntity.ok("username already exists");
+        if(userService.isUserPresent(user)){
+           throw new UserNameAlreadyExists("UserName or Email","user",user.getUserName());
         }
         return userService.registerNewUser(user);
     }

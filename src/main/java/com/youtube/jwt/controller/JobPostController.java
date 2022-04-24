@@ -50,8 +50,8 @@ public class JobPostController extends BaseController {
 
     }
 
-    @GetMapping("removePost/{postId}")
-//    @PreAuthorize("hasRole('Admin')")
+    @GetMapping("rejectPost/{postId}")
+    @PreAuthorize("hasRole('Admin')")
     public JobPosts removePost(@PathVariable Integer postId) {
         JobPosts post = postRepository.findById(postId).get();
         post.setStatus(PostStatus.REJECTED);
@@ -85,7 +85,7 @@ public class JobPostController extends BaseController {
         return new ResponseEntity<JobPosts>(postService.getAllPostById(jobId), HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("updateJobPost/{id}")
     public ResponseEntity<JobPosts> updateJobPost(@RequestBody JobPosts jobPosts, @PathVariable("id") Integer jobId) {
         return new ResponseEntity<JobPosts>(postService.updateJobPost(jobPosts, jobId), HttpStatus.OK);
     }
