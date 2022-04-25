@@ -91,7 +91,6 @@ public class UserService {
         boolean userExists = false;
         User existingUser = userDao.findByUserName(user.getUserName());
         User existingUserEmail=userDao.findByUserEmail(user.getUserEmail());
-        System.out.println("userEmail"+user.getUserEmail());
         if (existingUser != null) {
             userExists = true;
         }

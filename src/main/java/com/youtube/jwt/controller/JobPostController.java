@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +33,9 @@ public class JobPostController extends BaseController {
 
     @GetMapping("/approvePost/{postId}")
     @PreAuthorize("hasRole('Admin')")
-    public JobPosts approveJobPost(@PathVariable Integer postId) {
+    public JobPosts approveJobPost(@PathVariable Integer postId, HttpServletRequest request) {
+        String value=request.getParameter("status");
+        System.out.println("value from frontend"+value);
         JobPosts jobPosts = postRepository.findById(postId).get();
         jobPosts.setStatus(PostStatus.APPROVED);
         return postRepository.save(jobPosts);
@@ -84,8 +86,7 @@ public class JobPostController extends BaseController {
     public ResponseEntity<JobPosts> getAllPostById(@PathVariable("id") Integer jobId) {
         return new ResponseEntity<JobPosts>(postService.getAllPostById(jobId), HttpStatus.OK);
     }
-
-    @PutMapping("updateJobPost/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<JobPosts> updateJobPost(@RequestBody JobPosts jobPosts, @PathVariable("id") Integer jobId) {
         return new ResponseEntity<JobPosts>(postService.updateJobPost(jobPosts, jobId), HttpStatus.OK);
     }

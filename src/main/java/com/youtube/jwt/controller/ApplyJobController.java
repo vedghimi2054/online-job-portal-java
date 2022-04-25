@@ -19,18 +19,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class ApplyJobController extends BaseController {
@@ -68,10 +59,11 @@ public class ApplyJobController extends BaseController {
                 .path("/downloadFile/")
                 .path(fileName)
                 .toUriString();
-        new UploadFileResponse(fileName,fileDownloadUri,file.getContentType(),file.getSize());
+        UploadFileResponse response=new UploadFileResponse(fileName,fileDownloadUri,file.getContentType(),file.getSize());
         applyJob.setResume(file.getOriginalFilename());
         return new ResponseEntity<ApplyJob>(applyJobService.createApply(applyJob), HttpStatus.CREATED);
     }
+
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Load file as Resource
@@ -92,7 +84,7 @@ public class ApplyJobController extends BaseController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
     @GetMapping("/getAllApplyJobList")
@@ -110,5 +102,4 @@ public class ApplyJobController extends BaseController {
         applyJobService.deleteApplyJobList();
         return new ResponseEntity<String>("deleted successfully",HttpStatus.OK);
     }
-
 }
