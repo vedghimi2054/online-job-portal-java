@@ -4,13 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.youtube.jwt.entity.Recruiters;
 import com.youtube.jwt.helper.UploadResumeHelper;
+import com.youtube.jwt.payload.UploadFileResponse;
 import com.youtube.jwt.service.CompanyService;
+import com.youtube.jwt.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -18,6 +21,8 @@ import java.util.List;
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private FileStorageService fileStorageService;
     @Autowired
     private UploadResumeHelper uploadResumeHelper;
 
@@ -33,15 +38,18 @@ public class CompanyController {
             if(!file.getContentType().equals("image/jpg")){
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Request must contain jpg only");
             }
-            boolean f=uploadResumeHelper.uploadFile(file);
-            if(f){
-                recruiters.setCompanyLogo(file.getOriginalFilename());
-            }
 
         }catch (Exception e){
             e.printStackTrace();
         }
+        String fileName = fileStorageService.storeFile(file);
 
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+        UploadFileResponse response=new UploadFileResponse(fileName,fileDownloadUri,file.getContentType(),file.getSize());
+        recruiters.setCompanyLogo(file.getOriginalFilename());
         return new ResponseEntity<Recruiters>(companyService.createRecruiters(recruiters), HttpStatus.CREATED);
     }
     @GetMapping("/getAllRecruiters")

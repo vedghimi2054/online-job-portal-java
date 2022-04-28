@@ -2,7 +2,6 @@ package com.youtube.jwt.helper;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class UploadResumeHelper {
-    public final String UPLOAD_DIR="/home/spacex/Desktop/springbootimage";
+    public final String UPLOAD_DIR="/home/spacex/Desktop/springbootlogo";
 
     public boolean uploadFile(MultipartFile multipartFile){
         boolean f=false;

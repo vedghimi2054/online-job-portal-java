@@ -103,3 +103,4 @@ public class ApplyJobController extends BaseController {
         return new ResponseEntity<String>("deleted successfully",HttpStatus.OK);
     }
 }
+
