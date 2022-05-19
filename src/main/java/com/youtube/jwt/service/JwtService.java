@@ -1,8 +1,8 @@
 package com.youtube.jwt.service;
 
 import com.youtube.jwt.dao.UserDao;
-import com.youtube.jwt.entity.JwtRequest;
-import com.youtube.jwt.entity.JwtResponse;
+import com.youtube.jwt.Security.JwtRequest;
+import com.youtube.jwt.Security.JwtResponse;
 import com.youtube.jwt.entity.User;
 import com.youtube.jwt.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,7 +4,6 @@ import com.youtube.jwt.dao.PostRepository;
 import com.youtube.jwt.entity.JobPosts;
 import com.youtube.jwt.entity.PostStatus;
 import com.youtube.jwt.service.impl.PostServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +17,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/jobpost")
 public class JobPostController extends BaseController {
-    @Autowired
     private PostServiceImpl postService;
-    @Autowired
     private PostRepository postRepository;
+
+    public JobPostController(PostServiceImpl postService, PostRepository postRepository) {
+        this.postService = postService;
+        this.postRepository = postRepository;
+    }
 
     @PostMapping("/createpost")
     @PreAuthorize("hasRole('Recruiter')")
@@ -41,33 +43,12 @@ public class JobPostController extends BaseController {
         return postRepository.save(jobPosts);
     }
 
-    @GetMapping("/approveAll")
-//    @PreAuthorize("hasRole('Admin')")
-    public String approveAll() {
-        ((Collection<JobPosts>) postRepository.findAll()).stream().filter(post -> post.getStatus().equals(PostStatus.PENDING)).forEach(post -> {
-            post.setStatus(PostStatus.APPROVED);
-            postRepository.save(post);
-        });
-        return "All approved post";
-
-    }
-
     @GetMapping("rejectPost/{postId}")
     @PreAuthorize("hasRole('Admin')")
     public JobPosts removePost(@PathVariable Integer postId) {
         JobPosts post = postRepository.findById(postId).get();
         post.setStatus(PostStatus.REJECTED);
         return postRepository.save(post);
-    }
-
-    @GetMapping("/rejectAll")
-//    @PreAuthorize("hasRole('Admin')")
-    public String rejectAll() {
-        ((Collection<JobPosts>) postRepository.findAll()).stream().filter(post -> post.getStatus().equals(PostStatus.PENDING)).forEach(post -> {
-            post.setStatus(PostStatus.REJECTED);
-            postRepository.save(post);
-        });
-        return "Rejected all posts!!";
     }
 
     @GetMapping("/viewAll")

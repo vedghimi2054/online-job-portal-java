@@ -1,4 +1,6 @@
-package com.youtube.jwt.entity;
+package com.youtube.jwt.Security;
+
+import com.youtube.jwt.entity.User;
 
 public class JwtResponse {
 

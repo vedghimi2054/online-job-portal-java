@@ -1,12 +1,18 @@
 package com.youtube.jwt.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Data
+@Setter
+@Getter
 @Entity
-@Table(name="apply_job")
+@Table(name = "apply_job")
 public class ApplyJob {
     @Id
     @GeneratedValue(

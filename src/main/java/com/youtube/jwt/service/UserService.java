@@ -4,16 +4,9 @@ import com.youtube.jwt.dao.RoleDao;
 import com.youtube.jwt.dao.UserDao;
 import com.youtube.jwt.entity.Role;
 import com.youtube.jwt.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,14 +14,17 @@ import java.util.Set;
 @Service
 public class UserService {
 
-    @Autowired
     private UserDao userDao;
 
-    @Autowired
     private RoleDao roleDao;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
+        this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void initRoleAndUser() {
 
@@ -83,7 +79,6 @@ public class UserService {
     public List<User> getAllUsers() {
         return (List<User>) userDao.findAll();
     }
-
     //    public void deleteRegisterUsers(Integer userId){
 //        userDao.deleteById(String.valueOf(userId));
 //    }

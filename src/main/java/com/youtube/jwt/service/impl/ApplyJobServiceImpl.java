@@ -4,14 +4,17 @@ import com.youtube.jwt.dao.ApplyJobRepository;
 import com.youtube.jwt.entity.ApplyJob;
 import com.youtube.jwt.exception.ResourceNotFoundException;
 import com.youtube.jwt.service.ApplyJobService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 public class ApplyJobServiceImpl implements ApplyJobService {
-    @Autowired
-    private ApplyJobRepository applyJobRepository;
+    private final ApplyJobRepository applyJobRepository;
+
+    public ApplyJobServiceImpl(ApplyJobRepository applyJobRepository) {
+        this.applyJobRepository = applyJobRepository;
+    }
+
     @Override
     public ApplyJob createApply(ApplyJob applyJob) {
         return applyJobRepository.save(applyJob);

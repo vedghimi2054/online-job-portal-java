@@ -1,0 +1,27 @@
+version: '3.6'
+
+services:
+  springboot-container:
+    image: spring-boot-docker-compose:1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./src/main/resources/static/files:/data/springboot-container
+    ports:
+      - "8080:8080"
+    links:
+      - app-db
+
+  app-db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=sushil123
+volumes:
+  pgdata:
+

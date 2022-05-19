@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface UserDao extends CrudRepository<User, String> {
-//    @Query("SELECT u FROM User u WHERE CONCAT(U.userName,U.userFirstName,U.userLastName,U.userEmail) LIKE %?1%")
+//    @Query(value = "SELECT u FROM User u WHERE CONCAT(U.userName,U.userFirstName,U.userLastName,U.userEmail) LIKE %?1%")
     User findByUserName(String username);
     User findByUserEmail(String email);
 //    @Query("SELECT u FROM User u WHERE u.userName LIKE %?1%" +

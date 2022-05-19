@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body style="background-color: #f6f8fc; font-family: 'Arial', sans-serif;">
+<div style="padding:2rem;">
+    <div style="
+                background-color: #fff;
+                padding: 2.5rem;
+                border-radius: 10px;
+                max-width: 40rem;
+                margin: auto;
+            "
+         class="content-container">
+        <div class="content-body">
+            <div class="content-header">
+                <hr style="border-bottom: .7px solid #c8c8c8;
+                    border-top: 0;"/>
+
+                <div class="content-body">
+                    <h4 style="
+                            font-size: 1.5rem;
+                            color: #222d3a;
+                            "
+                        th:text="${title}"
+                    >{title}
+                    </h4>
+                    <h6 th:text="${body}"
+                        style="
+                            color: #434f5e;
+                            font-size: 1.5rem;
+                            ">{body}
+
+                    </h6>
+                </div>
+                <br>
+                <p style="
+                        font-weight: 600;
+                        line-height: 150%;
+                        color: #677483;
+                        font-size: 1.2rem;
+                        padding-top: .5rem;
+                        ">
+                    Thank You!<br/>
+                </p>
+
+                <div class="content-footer">
+                    <hr style="border-bottom: .7px solid #c8c8c8;
+                    border-top: 0;"/>
+
+                    <p style="
+                        font-weight: 600;
+                        line-height: 150%;
+                        color: #677483;
+                        font-size: 1.2rem;
+                        padding-top: .5rem;
+                        ">
+                        Online job portal <br/>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

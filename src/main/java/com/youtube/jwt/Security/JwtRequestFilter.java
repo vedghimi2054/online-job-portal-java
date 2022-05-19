@@ -1,4 +1,4 @@
-package com.youtube.jwt.configuration;
+package com.youtube.jwt.Security;
 import com.youtube.jwt.service.JwtService;
 import com.youtube.jwt.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -32,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String username = null;
         String jwtToken = null;
-
+//check null and format
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {

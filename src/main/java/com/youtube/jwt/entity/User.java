@@ -1,4 +1,5 @@
 package com.youtube.jwt.entity;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +18,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
-public class User {
-
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    private Integer user_id;
+public class User{
     @Id
     private String userName;
     private String userFirstName;
@@ -35,4 +33,9 @@ public class User {
     private Set<Role> role;
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<ApplyJob> applyJobs;
+
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    public String getUserPassword() {
+//        return userPassword;
+//    }
 }

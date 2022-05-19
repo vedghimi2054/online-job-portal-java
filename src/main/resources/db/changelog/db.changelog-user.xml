@@ -6,7 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="dc921555ae311f6f7a7c" author="jobportalcdn">
-        <loadData tableName="user" file="db/changelog/mock/users.csv" separator=";">
+
         <createTable tableName="user">
 
             <column name="user_id" type="integer" autoIncrement="true">
@@ -27,10 +27,12 @@
             <column name="password" type="varchar(100)">
                 <constraints nullable="false"></constraints>
             </column>
+
         </createTable>
-        <loadData tableName="role" file="db/changelog/mock/roles.csv" separator=";"></loadData>
+
 
         <createTable tableName="role">
+
             <column name="role_id" type="integer">
                 <constraints primaryKey="true" primaryKeyName="role_id_pk" unique="true"></constraints>
             </column>
@@ -42,8 +44,8 @@
             </column>
         </createTable>
 
-        <loadData tableName="user_role" file="db/changelog/mock/user_role.csv" separator=";"></loadData>
         <createTable tableName="user_role">
+
             <column name="role_id" type="integer">
                 <constraints foreignKeyName="role_role_fk" references="role(role_id)"/>
             </column>
@@ -59,6 +61,11 @@
                                  referencedTableName="apply_job"
                                  referencedColumnNames="job_id"
         />
+    </changeSet>
+    <changeSet author="" id="">
+        <loadData tableName="user" file="db/changelog/mock/users.csv" separator=";" />
+        <loadData tableName="role" file="db/changelog/mock/roles.csv" separator=";"/>
+        <loadData tableName="user_role" file="db/changelog/mock/user_role.csv" separator=";"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -4,7 +4,6 @@ import com.youtube.jwt.dao.CompanyDao;
 import com.youtube.jwt.entity.Recruiters;
 import com.youtube.jwt.exception.ResourceNotFoundException;
 import com.youtube.jwt.service.CompanyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,12 @@ import java.util.List;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
-    @Autowired
     private CompanyDao companyDao;
+
+    public CompanyServiceImpl(CompanyDao companyDao) {
+        this.companyDao = companyDao;
+    }
+
     @Override
     public Recruiters createRecruiters(Recruiters recruiters) {
         return companyDao.save(recruiters);
