@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -30,11 +29,10 @@ public class ForgetPasswordController extends BaseController {
         this.userDao=userDao;
 
     }
-
     @PostMapping("/forget_password")
-    public String processForgetPassword(@RequestParam("email") String userEmail, HttpServletRequest request) {
+    public String processForgetPassword(@RequestParam("checkemail") String userEmail, HttpServletRequest request) {
         String token = RandomString.make(32);
-        System.out.println("token"+token);
+//        System.out.println("token"+token);
         try {
             userService.updateResetPasswordToken(token, userEmail);
             String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
@@ -46,6 +44,14 @@ public class ForgetPasswordController extends BaseController {
         return "successfully send email please check your email";
 
     }
+//    @GetMapping("/reset_password")
+//    public String showResetPasswordForm(@Param(value = "token") String token) {
+//        User user = userService.getByResetPasswordToken(token);
+//        if(user==null){
+//            return "invalid token";
+//        }
+//        return "success get token";
+//    }
     @PostMapping("/reset_password")
     public String processResetPassword(@Param("token") String token, @RequestParam("password") String password){
         User user=userService.getByResetPasswordToken(token);

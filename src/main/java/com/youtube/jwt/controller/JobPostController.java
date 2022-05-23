@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/jobpost")
 public class JobPostController extends BaseController {
     private PostServiceImpl postService;
     private PostRepository postRepository;
@@ -25,7 +24,7 @@ public class JobPostController extends BaseController {
         this.postRepository = postRepository;
     }
 
-    @PostMapping("/createpost")
+    @PostMapping("/jobpost/createpost")
     @PreAuthorize("hasRole('Recruiter')")
     public ResponseEntity<JobPosts> createPost(@RequestBody JobPosts jobPosts, Principal principal) {
         jobPosts.setStatus(PostStatus.PENDING);
@@ -33,7 +32,7 @@ public class JobPostController extends BaseController {
         return new ResponseEntity<JobPosts>(postService.createJobPost(jobPosts), HttpStatus.CREATED);
     }
 
-    @GetMapping("/approvePost/{postId}")
+    @GetMapping("jobpost/approvePost/{postId}")
     @PreAuthorize("hasRole('Admin')")
     public JobPosts approveJobPost(@PathVariable Integer postId, HttpServletRequest request) {
         String value=request.getParameter("status");
@@ -43,7 +42,7 @@ public class JobPostController extends BaseController {
         return postRepository.save(jobPosts);
     }
 
-    @GetMapping("rejectPost/{postId}")
+    @GetMapping("jobpost/rejectPost/{postId}")
     @PreAuthorize("hasRole('Admin')")
     public JobPosts removePost(@PathVariable Integer postId) {
         JobPosts post = postRepository.findById(postId).get();
@@ -51,28 +50,28 @@ public class JobPostController extends BaseController {
         return postRepository.save(post);
     }
 
-    @GetMapping("/viewAll")
+    @GetMapping("jobpost/viewAll")
 //    @PreAuthorize("hasRole('Admin')")
     public List<JobPosts> viewAll() {
         return ((Collection<JobPosts>) postRepository.findAll()).stream().filter(post -> post.getStatus().equals(PostStatus.APPROVED)).collect(Collectors.toList());
     }
 
-    @GetMapping("/getAllPosts")
+    @GetMapping("jobpost/getAllPosts")
 //    @PreAuthorize("hasRole('Recruiter')")
     public List<JobPosts> getAllPosts() {
         return postService.getAllPost();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("jobpost/{id}")
     public ResponseEntity<JobPosts> getAllPostById(@PathVariable("id") Integer jobId) {
         return new ResponseEntity<JobPosts>(postService.getAllPostById(jobId), HttpStatus.OK);
     }
-    @PutMapping("{id}")
+    @PutMapping("jobpost/{id}")
     public ResponseEntity<JobPosts> updateJobPost(@RequestBody JobPosts jobPosts, @PathVariable("id") Integer jobId) {
         return new ResponseEntity<JobPosts>(postService.updateJobPost(jobPosts, jobId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/deletePost/{id}")
+    @DeleteMapping("jobpost/deletePost/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") Integer jobId) {
         postService.deleteJobPost(jobId);
         return new ResponseEntity<>("delete successfully", HttpStatus.OK);

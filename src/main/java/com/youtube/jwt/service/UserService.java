@@ -121,7 +121,4 @@ public class UserService {
         user.setResetPasswordToken(null);
         userDao.save(user);
     }
-    public User findUserByEmail(String email){
-        return userDao.findByUserEmail(email);
-    }
 }
