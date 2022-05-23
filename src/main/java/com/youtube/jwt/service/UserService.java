@@ -4,6 +4,8 @@ import com.youtube.jwt.dao.RoleDao;
 import com.youtube.jwt.dao.UserDao;
 import com.youtube.jwt.entity.Role;
 import com.youtube.jwt.entity.User;
+import com.youtube.jwt.exception.NotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -97,5 +99,29 @@ public class UserService {
 
     public String getEncodedPassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+//    forget password
+    public void updateResetPasswordToken(String token,String email){
+        User user=userDao.findByUserEmail(email);
+        if(user!=null){
+            user.setResetPasswordToken(token);
+            userDao.save(user);
+        }
+        else {
+            throw new NotFoundException("could not find any user with email "+email);
+        }
+    }
+    public User getByResetPasswordToken(String token){
+        return userDao.findByResetPasswordToken(token);
+    }
+    public void updatePassword(User user, String newPassword) {
+        String encodedPassword=getEncodedPassword(newPassword);
+        user.setUserPassword(encodedPassword);
+        user.setResetPasswordToken(null);
+        userDao.save(user);
+    }
+    public User findUserByEmail(String email){
+        return userDao.findByUserEmail(email);
     }
 }

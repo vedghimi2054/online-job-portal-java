@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.youtube.jwt.ApiResponse.ApiResponse;
 import com.youtube.jwt.ApiResponse.ApplyJobResponse;
 import com.youtube.jwt.controller.base.BaseController;
-import com.youtube.jwt.dto.customDto.ContactDto;
 import com.youtube.jwt.entity.ApplyJob;
 import com.youtube.jwt.payload.UploadFileResponse;
 import com.youtube.jwt.service.ApplyJobService;
@@ -80,7 +79,11 @@ public class ApplyJobController extends BaseController {
         ApplyJobResponse applyJobResponse = new ApplyJobResponse();
         applyJobResponse.setUploadFileResponse(response);
         applyJobResponse.setApplyJob(applyJob1);
-        jobMailService.sendNotificationToUsers(applyJob1);
+        boolean jms=jobMailService.sendNotificationToUsers(applyJob1);
+        if(jms){
+            System.out.println("successfully send mail");
+            return new ResponseEntity<>(new ApiResponse("successfully send mail"),HttpStatus.OK);
+        }
         return new ResponseEntity<ApiResponse>(new ApiResponse("Saved",applyJobResponse),HttpStatus.OK);
     }
 
@@ -110,7 +113,7 @@ public class ApplyJobController extends BaseController {
     }
 
     @GetMapping("/getAllApplyJobList")
-    @PreAuthorize("hasRole('Recruiter')")
+//    @PreAuthorize("hasRole('Recruiter')")
     public ResponseEntity<ApiResponse> getAllApplyJobList() {
         List<ApplyJob> applyJobList=applyJobService.getApplyJobList();
         return new ResponseEntity<>(new ApiResponse("success",applyJobList),HttpStatus.OK);
@@ -126,22 +129,6 @@ public class ApplyJobController extends BaseController {
     public ResponseEntity<String> deleteAllApplyJobList() {
         applyJobService.deleteApplyJobList();
         return new ResponseEntity<>("deleted successfully", HttpStatus.OK);
-    }
-    @PostMapping("/contact")
-    public ResponseEntity<ApiResponse> sendContactMail(@RequestBody ContactDto contactDto) throws MessagingException {
-        if(contactDto==null){
-            return new ResponseEntity<>(new ApiResponse("Field must not be null"),HttpStatus.NO_CONTENT);
-        }
-        ContactDto contactDto1 = contactDto;
-        contactDto1 = contactDto;
-        String body = " Query send from  "+ contactDto1.getFirstName() +" "+ contactDto1.getMiddleName() +" "+ contactDto1.getLastName()+
-                "  his/her email address is : " + contactDto1.getEmail() + "  description about query : " + contactDto1.getDescription();
-
-
-        jobMailService.sendContactMail(body, body);
-
-        return new ResponseEntity<>(new ApiResponse("Mail send Successfully"),HttpStatus.OK);
-
     }
 }
 

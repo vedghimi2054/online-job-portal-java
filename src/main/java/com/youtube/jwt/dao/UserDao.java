@@ -9,10 +9,9 @@ import java.util.List;
 public interface UserDao extends CrudRepository<User, String> {
 //    @Query(value = "SELECT u FROM User u WHERE CONCAT(U.userName,U.userFirstName,U.userLastName,U.userEmail) LIKE %?1%")
     User findByUserName(String username);
+
+//    @Query(value = "select * from users where email=?1",nativeQuery = true)
     User findByUserEmail(String email);
-//    @Query("SELECT u FROM User u WHERE u.userName LIKE %?1%" +
-//            "OR u.userFirstName LIKE %?1%" +
-//            "OR u.userLastName LIKE %?1%" +
-//            "OR U.userEmail LIKE %?1%")
-//    List<User> search(String keyword,User user);
+//    @Query(value = "SELECT * FROM users WHERE token = ?1",nativeQuery = true)
+    User findByResetPasswordToken(String token);
 }
