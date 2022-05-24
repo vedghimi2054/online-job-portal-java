@@ -10,4 +10,6 @@ public interface PostService {
     JobPosts getAllPostById(Integer jobId);
     JobPosts updateJobPost(JobPosts jobPosts,Integer jobId);
     void deleteJobPost(Integer jobId);
+
+    List<JobPosts> listAll(String keyword);
 }

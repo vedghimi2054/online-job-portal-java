@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -33,6 +34,7 @@ public class JobMailServiceImpl {
         this.applyJobRepository = applyJobRepository;
     }
 
+    @Async
     public boolean SendMail(ApplyJob applyJob, String body, String subject) throws MessagingException {
         MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMailMessage);
@@ -66,6 +68,7 @@ public class JobMailServiceImpl {
         return SendMail(applyJob, body, "Thank you for posting your resume");
     }
 
+    @Async
     public void sendEmail(String recipientEmail, String link)
             throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();

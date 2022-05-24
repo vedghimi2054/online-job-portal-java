@@ -1,9 +1,11 @@
 package com.youtube.jwt.controller;
+import com.youtube.jwt.ApiResponse.ApiResponse;
 import com.youtube.jwt.controller.base.BaseController;
 import com.youtube.jwt.dao.PostRepository;
 import com.youtube.jwt.entity.JobPosts;
 import com.youtube.jwt.entity.PostStatus;
 import com.youtube.jwt.service.impl.PostServiceImpl;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,5 +77,11 @@ public class JobPostController extends BaseController {
     public ResponseEntity<String> deletePost(@PathVariable("id") Integer jobId) {
         postService.deleteJobPost(jobId);
         return new ResponseEntity<>("delete successfully", HttpStatus.OK);
+    }
+//    searching jobposts
+    @GetMapping("jobpost/searchByJobsList")
+    public ResponseEntity<ApiResponse> searchByJobsList(@Param("keyword") String keyword){
+        List<JobPosts> jobPostsList=postService.listAll(keyword);
+        return new ResponseEntity<>(new ApiResponse("success",jobPostsList),HttpStatus.OK);
     }
 }

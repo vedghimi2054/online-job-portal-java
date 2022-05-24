@@ -35,7 +35,7 @@ public class ForgetPasswordController extends BaseController {
 //        System.out.println("token"+token);
         try {
             userService.updateResetPasswordToken(token, userEmail);
-            String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
+            String resetPasswordLink = "http://localhost:3000" + "/resetpassword?token=" + token;
             jobMailService.sendEmail(userEmail, resetPasswordLink);
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new NotFoundException("error" + e.getMessage());

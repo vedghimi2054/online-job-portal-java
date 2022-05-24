@@ -45,4 +45,12 @@ public class PostServiceImpl implements PostService {
     public void deleteJobPost(Integer jobId) {
             postRepository.deleteById(jobId);
     }
+
+    @Override
+    public List<JobPosts> listAll(String keyword) {
+        if(keyword!=null){
+            return postRepository.searchJobPostsBy(keyword);
+        }
+        return (List<JobPosts>) postRepository.findAll();
+    }
 }
